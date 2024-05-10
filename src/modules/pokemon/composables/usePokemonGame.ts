@@ -3,6 +3,7 @@
 import { pokeApi } from '../api/pokemonApi'
 import { computed, onMounted, ref } from 'vue'
 import { GameStatus, type PokemonList, type pokemon } from '../interfaces'
+import confeti from 'canvas-confetti'
 
 export const usePokemonGame = () => {
   //defino una variable que evalua el estado de mi juego
@@ -16,11 +17,18 @@ export const usePokemonGame = () => {
   })
   //pokemon options
   const pokemonOptions = ref<pokemon[]>([])
+  //funcion para manejar las opciones que aparecen, supongo que tendra que tomar los primeros 4 elementos del array de pokemons, pero no lo se aun
+  const nextOption = (howMany: number = 4) => {
+    gameStatus.value = GameStatus.Playing
+    //almaceno 4 pokemons
+    pokemonOptions.value = pokemons.value.slice(0, howMany)
+    //almaceno todos los que quedan despues de esos 4, empieza a cortar de 4 para arriba
+    pokemons.value = pokemons.value.slice(howMany)
+  }
   //tengo que hacer una funcion que tome un pokemon random dentro del array pokemon options
   const getPokemonOption = computed(() => {
     const randomIndex = Math.floor(Math.random() * pokemonOptions.value.length)
-    const selectedPokemon = pokemonOptions.value[randomIndex]
-    return selectedPokemon
+    return pokemonOptions.value[randomIndex]
   })
   //trabajare en esta parte para traer las datas desde la api de mis pokemones
   const getPokemon = async (): Promise<pokemon[]> => {
@@ -43,13 +51,21 @@ export const usePokemonGame = () => {
     return pokemonArray.sort(() => Math.random() - 0.5)
   }
 
-  //funcion para manejar las opciones que aparecen, supongo que tendra que tomar los primeros 4 elementos del array de pokemons, pero no lo se aun
-  const nextOption = (howMany: number = 4) => {
-    gameStatus.value = GameStatus.Playing
-    //almaceno 4 pokemons
-    pokemonOptions.value = pokemons.value.slice(0, howMany)
-    //almaceno todos los que quedan despues de esos 4, empieza a cortar de 4 para arriba
-    pokemons.value = pokemons.value.slice(howMany)
+  //aqui chequearemos el game status
+  const checkAnswer = (id: number) => {
+    const hasWon = getPokemonOption.value.id === id
+
+    if (hasWon) {
+      gameStatus.value = GameStatus.Won
+      confeti({
+        particleCount: 300,
+        spread: 150,
+        origin: { y: 0.6 }
+      })
+    } else {
+      gameStatus.value = GameStatus.Lost
+    }
+    return hasWon
   }
   onMounted(async () => {
     //extraigco mis pokemones
@@ -63,7 +79,7 @@ export const usePokemonGame = () => {
     isLoading,
     pokemonOptions,
     getPokemonOption,
-
+    checkAnswer,
     //methods
     nextOption
   }

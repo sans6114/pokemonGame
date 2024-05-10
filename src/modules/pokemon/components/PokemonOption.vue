@@ -9,7 +9,7 @@
         :key="id"
         @click="$emit('selectedOption', id)"
       >
-        {{ name }}
+        {{ id }}
       </button>
     </ul>
   </div>

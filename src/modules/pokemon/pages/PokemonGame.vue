@@ -14,6 +14,7 @@
     </h1>
     <h3>
       {{ gameStatus }}
+      {{ getPokemonOption.id }}
     </h3>
 
     <!--aqui crearemos un componente que lo que hara exactamente es mostrar la imagen en negro del pokemon -->
@@ -22,7 +23,7 @@
       :show-pokemon="gameStatus !== GameStatus.Playing"
     />
     <!-- aqui estara el componente que mostrara las opciones del pokemon que se ve en la imagen-->
-    <PokemonOption :options="PokemonOption" @selectedOption="selectedOption" />
+    <PokemonOption :options="PokemonOption" @selectedOption="checkAnswer" />
   </section>
 </template>
 
@@ -34,9 +35,5 @@ import PokemonPicture from '../components/PokemonPicture.vue'
 import { usePokemonGame } from '../composables/usePokemonGame'
 
 //importo el composable
-const { getPokemonOption, isLoading, gameStatus } = usePokemonGame()
-
-const selectedOption = (value: number) => {
-  console.log({ value })
-}
+const { getPokemonOption, isLoading, gameStatus, checkAnswer } = usePokemonGame()
 </script>
