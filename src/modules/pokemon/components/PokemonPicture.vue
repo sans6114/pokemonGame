@@ -1,5 +1,5 @@
 <template>
-  <div class="w-96">
+  <div class="w-96 h-full">
     <img :src="pokemonImage" v-if="!showPokemon" alt="img pokemon" class="w-full brightness-0" />
     <img :src="pokemonImage" v-else alt="img pokemon" class="w-full" />
   </div>

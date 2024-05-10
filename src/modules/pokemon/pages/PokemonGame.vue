@@ -13,7 +13,7 @@
       ¿Quién es este pokemon?
     </h1>
     <h3>
-      {{ getPokemonOption }}
+      {{ gameStatus }}
     </h3>
 
     <!--aqui crearemos un componente que lo que hara exactamente es mostrar la imagen en negro del pokemon -->
@@ -22,15 +22,21 @@
       :show-pokemon="gameStatus !== GameStatus.Playing"
     />
     <!-- aqui estara el componente que mostrara las opciones del pokemon que se ve en la imagen-->
-    <PokemonOption />
+    <PokemonOption :options="PokemonOption" @selectedOption="selectedOption" />
   </section>
 </template>
 
 <script setup lang="ts">
+//importo gamesstatus desde interfaz
+import { GameStatus } from '../interfaces'
 import PokemonOption from '../components/PokemonOption.vue'
 import PokemonPicture from '../components/PokemonPicture.vue'
 import { usePokemonGame } from '../composables/usePokemonGame'
 
 //importo el composable
 const { getPokemonOption, isLoading, gameStatus } = usePokemonGame()
+
+const selectedOption = (value: number) => {
+  console.log({ value })
+}
 </script>
