@@ -12,10 +12,13 @@
     >
       ¿Quién es este pokemon?
     </h1>
-    <h3>
-      {{ gameStatus }}
-      {{ getPokemonOption.id }}
-    </h3>
+    <button
+      class="capitalize shadow-[0_2.8px_2.2px_rgba(0,_0,_0,_0.034),_0_6.7px_5.3px_rgba(0,_0,_0,_0.048),_0_12.5px_10px_rgba(0,_0,_0,_0.06),_0_22.3px_17.9px_rgba(0,_0,_0,_0.072),_0_41.8px_33.4px_rgba(0,_0,_0,_0.086),_0_100px_80px_rgba(0,_0,_0,_0.12)] cursor-pointer transition-all p-3 px-4 rounded-2xl hover:font-bold mt-2 mb-5 bg-blue-400 hover:bg-blue-600"
+      @click="getNextRound(4)"
+      v-if="gameStatus !== GameStatus.Playing"
+    >
+      Intenta de nuevo
+    </button>
 
     <!--aqui crearemos un componente que lo que hara exactamente es mostrar la imagen en negro del pokemon -->
     <PokemonPicture
@@ -23,7 +26,12 @@
       :show-pokemon="gameStatus !== GameStatus.Playing"
     />
     <!-- aqui estara el componente que mostrara las opciones del pokemon que se ve en la imagen-->
-    <PokemonOption :options="PokemonOption" @selectedOption="checkAnswer" />
+    <PokemonOption
+      :options="options"
+      :blockSelection="gameStatus !== GameStatus.Playing"
+      :correctAnswer="getPokemonOption.id"
+      @selectedOption="checkAnswer"
+    />
   </section>
 </template>
 
@@ -35,5 +43,12 @@ import PokemonPicture from '../components/PokemonPicture.vue'
 import { usePokemonGame } from '../composables/usePokemonGame'
 
 //importo el composable
-const { getPokemonOption, isLoading, gameStatus, checkAnswer } = usePokemonGame()
+const {
+  getPokemonOption,
+  isLoading,
+  gameStatus,
+  checkAnswer,
+  pokemonOptions: options,
+  getNextRound
+} = usePokemonGame()
 </script>

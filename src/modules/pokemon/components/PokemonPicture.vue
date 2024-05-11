@@ -1,5 +1,5 @@
 <template>
-  <div class="w-96 h-full">
+  <div class="w-48 h-full">
     <img :src="pokemonImage" v-if="!showPokemon" alt="img pokemon" class="w-full brightness-0" />
     <img :src="pokemonImage" v-else alt="img pokemon" class="w-full" />
   </div>
@@ -7,6 +7,7 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
+import { GameStatus } from '../interfaces'
 //definimos nuestras props
 interface Props {
   pokemonId: number
