@@ -5,7 +5,8 @@ export default {
     './index.html',
     './src/**/*.{vue,js,ts,jsx,tsx,vue}',
     './src/modules/pokemon/components/PokemonPicture.vue',
-    './src/modules/pokemon/components/PokemonOption.vue'
+    './src/modules/pokemon/components/PokemonOption.vue',
+    './src/modules/pokemon/components/CounterPokemonGame.vue'
   ],
   theme: {
     extend: {}

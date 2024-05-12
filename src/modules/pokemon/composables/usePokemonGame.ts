@@ -10,6 +10,7 @@ export const usePokemonGame = () => {
   // al usar <> estoy definiendo el tipo de dato que contendra la variable gamestatus, eso significa que tendra tres tipos de valores
   //ahora al hacer '.playing' o '.won' puedo usarlo ya que importe la interface
   const gameStatus = ref<GameStatus>(GameStatus.Playing)
+  //variable que manejara las victorias
   //aqui debajo haremos una propiedad computada que servira a la hora de cargar nuevos pokemones
   const pokemons = ref<pokemon[]>([])
   const isLoading = computed(() => {
@@ -52,12 +53,15 @@ export const usePokemonGame = () => {
     return pokemonArray.sort(() => Math.random() - 0.5)
   }
 
-  //aqui chequearemos el game status
+  //aqui chequearemos el game status y tambien hicimos un contador de vistorias y perdidas
+  const lost = ref(0)
+  const won = ref(0)
   const checkAnswer = (id: number) => {
     const hasWon = getPokemonOption.value.id === id
 
     if (hasWon) {
       gameStatus.value = GameStatus.Won
+      won.value = won.value++
       confeti({
         particleCount: 300,
         spread: 150,
@@ -65,15 +69,19 @@ export const usePokemonGame = () => {
       })
     } else {
       gameStatus.value = GameStatus.Lost
+      lost.value++
     }
+    console.log(`You have won ${won.value} times`)
+    console.log(`You have lost ${lost.value} times`)
     return hasWon
   }
+
   onMounted(async () => {
     //extraigco mis pokemones
     pokemons.value = await getPokemon()
     getNextRound()
     console.log(pokemonOptions.value)
-    console.log(getNextRound())
+    console.log(checkAnswer)
   })
   return {
     //retorno el gamestatus
@@ -82,6 +90,8 @@ export const usePokemonGame = () => {
     pokemonOptions,
     getPokemonOption,
     checkAnswer,
+    lost,
+    won,
     //methods
     getNextRound
   }

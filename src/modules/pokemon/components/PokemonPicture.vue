@@ -7,7 +7,6 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
-import { GameStatus } from '../interfaces'
 //definimos nuestras props
 interface Props {
   pokemonId: number

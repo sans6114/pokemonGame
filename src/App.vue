@@ -1,5 +1,6 @@
 <template>
   <PokemonGame />
+  <CounterGame />
 </template>
 
 <script setup lang="ts">
