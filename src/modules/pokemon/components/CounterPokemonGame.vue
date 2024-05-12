@@ -13,20 +13,9 @@
       Here it's a simple counter with the points you've win, the idea it's in the future the app
       going to have a table with all points of the users. I hope you like it.
     </p>
-    <h3>you won {{ winning }} times</h3>
-    <h3>you {{ losting }} times</h3>
   </section>
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
-import { usePokemonGame } from '../composables/usePokemonGame'
-const { lost, won } = usePokemonGame()
-const winning = ref(won)
-const losting = ref(lost)
-
-watch([won, lost], ([newWon, newLost]) => {
-  winning.value = newWon
-  losting.value = newLost
-})
+// tengo 2 variables que estan cambiando
 </script>

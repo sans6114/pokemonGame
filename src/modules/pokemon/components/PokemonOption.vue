@@ -24,7 +24,6 @@
 
 <script setup lang="ts">
 import { GameStatus, type pokemon } from '../interfaces'
-
 interface Props {
   options: pokemon[]
   blockSelection: boolean

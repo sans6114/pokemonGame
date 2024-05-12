@@ -19,14 +19,7 @@ export const usePokemonGame = () => {
   //pokemon options
   const pokemonOptions = ref<pokemon[]>([])
   //funcion para manejar las opciones que aparecen, supongo que tendra que tomar los primeros 4 elementos del array de pokemons, pero no lo se aun
-  const getNextRound = (howMany: number = 4) => {
-    gameStatus.value = GameStatus.Playing
-    //almaceno 4 pokemons
-    pokemonOptions.value = pokemons.value.slice(0, howMany)
-    //almaceno todos los que quedan despues de esos 4, empieza a cortar de 4 para arriba
-    pokemons.value = pokemons.value.slice(howMany)
-    return console.log('hola')
-  }
+
   //tengo que hacer una funcion que tome un pokemon random dentro del array pokemon options
   const getPokemonOption = computed(() => {
     const randomIndex = Math.floor(Math.random() * pokemonOptions.value.length)
@@ -53,15 +46,13 @@ export const usePokemonGame = () => {
     return pokemonArray.sort(() => Math.random() - 0.5)
   }
 
-  //aqui chequearemos el game status y tambien hicimos un contador de vistorias y perdidas
-  const lost = ref(0)
-  const won = ref(0)
+  //aqui chequearemos el game status
+
   const checkAnswer = (id: number) => {
     const hasWon = getPokemonOption.value.id === id
 
     if (hasWon) {
       gameStatus.value = GameStatus.Won
-      won.value = won.value++
       confeti({
         particleCount: 300,
         spread: 150,
@@ -69,11 +60,33 @@ export const usePokemonGame = () => {
       })
     } else {
       gameStatus.value = GameStatus.Lost
-      lost.value++
     }
-    console.log(`You have won ${won.value} times`)
-    console.log(`You have lost ${lost.value} times`)
     return hasWon
+  }
+  //que podes hacer
+  // tambien iniciaremos dos variables, que se incrementaran cuando se inicie otra partida
+  //algo a agregar es que yo para esta instancia, tengo el valor de gamestatus, cambiado
+  const lost = ref(0)
+  const won = ref(0)
+  const games = ref(0)
+  const getNextRound = (howMany: number = 4) => {
+    // Si el juego se ha perdido
+    if (gameStatus.value === GameStatus.Lost) {
+      lost.value++
+      //console.log(lost.value)
+      //console.log(games.value)
+    }
+    // Si el juego se ha ganado
+    else if (gameStatus.value === GameStatus.Won) {
+      won.value++
+      //console.log(won.value)
+      //console.log(games.value)
+    }
+    //almaceno 4 pokemons
+    pokemonOptions.value = pokemons.value.slice(0, howMany)
+    //almaceno todos los que quedan despues de esos 4, empieza a cortar de 4 para arriba
+    pokemons.value = pokemons.value.slice(howMany)
+    games.value++
   }
 
   onMounted(async () => {
@@ -81,7 +94,6 @@ export const usePokemonGame = () => {
     pokemons.value = await getPokemon()
     getNextRound()
     console.log(pokemonOptions.value)
-    console.log(checkAnswer)
   })
   return {
     //retorno el gamestatus
@@ -92,6 +104,7 @@ export const usePokemonGame = () => {
     checkAnswer,
     lost,
     won,
+    games,
     //methods
     getNextRound
   }
