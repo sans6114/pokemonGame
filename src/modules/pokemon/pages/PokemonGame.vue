@@ -2,6 +2,12 @@
   <!--este template es basicamente el 'view' de mi pagina-->
   <!--seccion que tendra de objetivo mostrar un contador de victorias-->
   <CounterPokemonGame />
+  <div class="flex flex-col items-center text-3xl font-extrabold">
+    <h3>perdiste: {{ lost }}</h3>
+    <h3>ganaste: {{ won }}</h3>
+    <h3>Jugaste: {{ games }}</h3>
+  </div>
+
   <!--seccion que se mostrara en el momento en el que todavia no cargo la peticion http -->
   <section v-if="isLoading" class="flex flex-col justify-center items-center w-screen h-screen">
     <h1 class="text-4xl mb-10">Espere por favor</h1>
@@ -16,7 +22,7 @@
     </h1>
     <button
       class="capitalize shadow-[0_2.8px_2.2px_rgba(0,_0,_0,_0.034),_0_6.7px_5.3px_rgba(0,_0,_0,_0.048),_0_12.5px_10px_rgba(0,_0,_0,_0.06),_0_22.3px_17.9px_rgba(0,_0,_0,_0.072),_0_41.8px_33.4px_rgba(0,_0,_0,_0.086),_0_100px_80px_rgba(0,_0,_0,_0.12)] cursor-pointer transition-all p-3 px-4 rounded-2xl hover:font-bold mt-2 mb-5 bg-blue-400 hover:bg-blue-600"
-      @click="getNextRound(4), increment()"
+      @click="getNextRound(4)"
       v-if="gameStatus !== GameStatus.Playing"
     >
       Intenta de nuevo
@@ -34,14 +40,10 @@
       :correctAnswer="getPokemonOption.id"
       @selectedOption="checkAnswer"
     />
-
-    <h3>{{ losing }}</h3>
-    <h3>{{ winning }}</h3>
   </section>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
 //importo gamesstatus desde interfaz
 import { GameStatus } from '../interfaces'
 import PokemonOption from '../components/PokemonOption.vue'
@@ -63,15 +65,9 @@ const {
   games
 } = usePokemonGame()
 
-const winning = ref(won.value)
-const losing = ref(lost.value)
+console.log('ganaste: ', won.value)
+console.log('perdiste: ', lost.value)
+console.log('jugaste: ', games.value)
 
 // Función para incrementar los contadores de victorias y derrotas
-const increment = () => {
-  if (gameStatus.value === GameStatus.Won) {
-    winning.value++
-  } else if (gameStatus.value === GameStatus.Lost) {
-    losing.value++
-  }
-}
 </script>

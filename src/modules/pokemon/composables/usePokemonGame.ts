@@ -6,47 +6,34 @@ import { GameStatus, type PokemonList, type pokemon } from '../interfaces'
 import confeti from 'canvas-confetti'
 
 export const usePokemonGame = () => {
-  //defino una variable que evalua el estado de mi juego
-  // al usar <> estoy definiendo el tipo de dato que contendra la variable gamestatus, eso significa que tendra tres tipos de valores
-  //ahora al hacer '.playing' o '.won' puedo usarlo ya que importe la interface
   const gameStatus = ref<GameStatus>(GameStatus.Playing)
-  //variable que manejara las victorias
-  //aqui debajo haremos una propiedad computada que servira a la hora de cargar nuevos pokemones
+
   const pokemons = ref<pokemon[]>([])
   const isLoading = computed(() => {
     return pokemons.value.length === 0
   })
-  //pokemon options
-  const pokemonOptions = ref<pokemon[]>([])
-  //funcion para manejar las opciones que aparecen, supongo que tendra que tomar los primeros 4 elementos del array de pokemons, pero no lo se aun
 
-  //tengo que hacer una funcion que tome un pokemon random dentro del array pokemon options
+  const pokemonOptions = ref<pokemon[]>([])
+
   const getPokemonOption = computed(() => {
     const randomIndex = Math.floor(Math.random() * pokemonOptions.value.length)
     return pokemonOptions.value[randomIndex]
   })
-  //trabajare en esta parte para traer las datas desde la api de mis pokemones
+
   const getPokemon = async (): Promise<pokemon[]> => {
-    //obtener informacion de los pokemones pero solo de los primeros 151, eso al usar la ruta con el slash
-    //utilizo await ya que es una peticion asincrona a un servidor
     const res = await pokeApi.get<PokemonList>('/?limit=151')
-    //realizar peticion
-    //vamos a crear un array que contenga los pokemones pero de la forma que quiero osea con su nombre e id
+
     const pokemonArray = res.data.results.map((pokemon) => {
-      //para tomar el id de mi pokemon
       const urlParts = pokemon.url.split('/')
       const urlId = urlParts.at(-2) ?? '0'
       return {
-        //definimos el pokemon
         name: pokemon.name,
         id: +urlId
       }
     })
-    //mezclare los pokemones dentro del return
+
     return pokemonArray.sort(() => Math.random() - 0.5)
   }
-
-  //aqui chequearemos el game status
 
   const checkAnswer = (id: number) => {
     const hasWon = getPokemonOption.value.id === id
@@ -63,40 +50,30 @@ export const usePokemonGame = () => {
     }
     return hasWon
   }
-  //que podes hacer
-  // tambien iniciaremos dos variables, que se incrementaran cuando se inicie otra partida
-  //algo a agregar es que yo para esta instancia, tengo el valor de gamestatus, cambiado
+
   const lost = ref(0)
   const won = ref(0)
-  const games = ref(0)
-  const getNextRound = (howMany: number = 4) => {
-    // Si el juego se ha perdido
-    if (gameStatus.value === GameStatus.Lost) {
-      lost.value++
-      //console.log(lost.value)
-      //console.log(games.value)
-    }
-    // Si el juego se ha ganado
-    else if (gameStatus.value === GameStatus.Won) {
+  const games = ref(-1)
+  const increment = () => {
+    if (gameStatus.value === GameStatus.Won) {
       won.value++
-      //console.log(won.value)
-      //console.log(games.value)
+    } else if (gameStatus.value === GameStatus.Lost) {
+      lost.value++
     }
-    //almaceno 4 pokemons
+  }
+  const getNextRound = (howMany: number = 4) => {
     pokemonOptions.value = pokemons.value.slice(0, howMany)
-    //almaceno todos los que quedan despues de esos 4, empieza a cortar de 4 para arriba
     pokemons.value = pokemons.value.slice(howMany)
     games.value++
+    increment()
   }
 
   onMounted(async () => {
-    //extraigco mis pokemones
     pokemons.value = await getPokemon()
     getNextRound()
     console.log(pokemonOptions.value)
   })
   return {
-    //retorno el gamestatus
     gameStatus,
     isLoading,
     pokemonOptions,
@@ -106,6 +83,7 @@ export const usePokemonGame = () => {
     won,
     games,
     //methods
-    getNextRound
+    getNextRound,
+    increment
   }
 }
