@@ -1,8 +1,9 @@
 import { pokeApi } from '@/api'
-import { type Pokemon, type PokemonsResponse } from '@/interface'
-import { onMounted, ref } from 'vue'
+import { stateGame, type Pokemon, type PokemonsResponse } from '@/interface'
+import { onMounted, ref, computed } from 'vue'
 
 export const usePokemon = () => {
+  const onStateGame = ref<stateGame>(stateGame.Playing)
   const pokemonsRef = ref<Pokemon[]>([])
   const pokemonOptions = ref<Pokemon[]>([])
   const hasPokemons = ref(false)
@@ -32,10 +33,16 @@ export const usePokemon = () => {
   }
 
   const generatePokemonOptions = (countOptions: number = initialCountOptions) => {
-    const pokemonsOrder = pokemonsRef.value.sort(() => Math.random() - 0.5);
+    const pokemonsOrder = pokemonsRef.value.sort(() => Math.random() - 0.5)
     const options = pokemonsOrder.slice(0, countOptions)
-    pokemonOptions.value = options;
+    pokemonOptions.value = options
+    console.log(pokemonOptions.value)
   }
+
+  const generatePokemonSelected = computed(() => {
+    const randomIndex = Math.floor(Math.random() * initialCountOptions)
+    return pokemonOptions.value[randomIndex]
+  })
 
   onMounted(async () => {
     await getPokemons()
@@ -44,7 +51,9 @@ export const usePokemon = () => {
     }
   })
   return {
+    onStateGame,
     pokemonOptions,
-    generatePokemonOptions
+    generatePokemonOptions,
+    generatePokemonSelected
   }
 }
