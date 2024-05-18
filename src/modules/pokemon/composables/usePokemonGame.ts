@@ -53,7 +53,7 @@ export const usePokemonGame = () => {
 
   const lost = ref(0)
   const won = ref(0)
-  const games = ref(-1)
+  const games = ref(0)
   const increment = () => {
     if (gameStatus.value === GameStatus.Won) {
       won.value++
@@ -64,14 +64,16 @@ export const usePokemonGame = () => {
   const getNextRound = (howMany: number = 4) => {
     pokemonOptions.value = pokemons.value.slice(0, howMany)
     pokemons.value = pokemons.value.slice(howMany)
-    games.value++
     increment()
+    gameStatus.value = GameStatus.Playing
+    games.value++
   }
 
   onMounted(async () => {
     pokemons.value = await getPokemon()
     getNextRound()
     console.log(pokemonOptions.value)
+    console.log(getPokemonOption.value)
   })
   return {
     gameStatus,

@@ -1,7 +1,8 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
-    './node_modules/flowbite/**/*.js',
+    'node_modules/flowbite-vue/**/*.{js,jsx,ts,tsx,vue}',
+    'node_modules/flowbite/**/*.{js,jsx,ts,tsx}',
     './index.html',
     './src/**/*.{vue,js,ts,jsx,tsx,vue}',
     './src/modules/pokemon/components/PokemonPicture.vue',
@@ -11,5 +12,5 @@ export default {
   theme: {
     extend: {}
   },
-  plugins: [require('flowbite/plugin')]
+  plugins: ['flowbite/plugin']
 }
