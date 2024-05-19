@@ -28,6 +28,8 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
+import { usePokemon } from '@/composables'
+const { checkRes } = usePokemon()
 
 interface Props {
   pokemonId: number
