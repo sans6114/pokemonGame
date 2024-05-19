@@ -33,6 +33,7 @@ export const usePokemon = () => {
   }
 
   const generatePokemonOptions = (countOptions: number = initialCountOptions) => {
+    onStateGame.value = stateGame.Playing
     const pokemonsOrder = pokemonsRef.value.sort(() => Math.random() - 0.5)
     const options = pokemonsOrder.slice(0, countOptions)
     pokemonOptions.value = options
@@ -40,9 +41,23 @@ export const usePokemon = () => {
   }
 
   const generatePokemonSelected = computed(() => {
-    const randomIndex = Math.floor(Math.random() * initialCountOptions)
+    const randomIndex = Math.floor(Math.random() * pokemonOptions.value.length)
     return pokemonOptions.value[randomIndex]
   })
+
+  const checkRes = (id: number) => {
+    console.log(id)
+    console.log(generatePokemonSelected.value.id)
+
+    const youWon = generatePokemonSelected.value.id === id
+    if (youWon) {
+      onStateGame.value = stateGame.Won
+      console.log('you won')
+    } else {
+      onStateGame.value = stateGame.Lost
+      console.log('you lost')
+    }
+  }
 
   onMounted(async () => {
     await getPokemons()
@@ -54,6 +69,7 @@ export const usePokemon = () => {
     onStateGame,
     pokemonOptions,
     generatePokemonOptions,
-    generatePokemonSelected
+    generatePokemonSelected,
+    checkRes
   }
 }
