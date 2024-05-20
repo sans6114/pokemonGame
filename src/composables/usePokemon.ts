@@ -39,15 +39,14 @@ export const usePokemon = () => {
     pokemonOptions.value = options
     console.log(pokemonOptions.value)
   }
-
   const generatePokemonSelected = computed(() => {
     const randomIndex = Math.floor(Math.random() * pokemonOptions.value.length)
+    console.log(pokemonOptions.value[randomIndex])
     return pokemonOptions.value[randomIndex]
   })
 
   const checkRes = (id: number) => {
     console.log(id)
-    console.log(generatePokemonSelected.value.id)
 
     const youWon = generatePokemonSelected.value.id === id
     if (youWon) {

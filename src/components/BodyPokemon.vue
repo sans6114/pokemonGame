@@ -15,7 +15,7 @@
     </button>
     <div class="flex flex-col justify-center items-center gap-5">
       <button
-        class="bg-red-600 hover:bg-red-400 text-white font-bold py-2 px-4 rounded-full p-5"
+        class="bg-red-600 hover:bg-red-400 text-white font-bold py-2 px-4 rounded-full"
         v-for="{ name, id } in options"
         :key="id"
         @click="checkRes(id)"
