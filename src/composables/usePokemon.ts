@@ -1,11 +1,12 @@
 import { pokeApi } from '@/api'
-import { stateGame, type Pokemon, type PokemonsResponse } from '@/interface'
-import { onMounted, ref, computed } from 'vue'
+import { type Pokemon, type PokemonsResponse } from '@/interface'
+import { onMounted, ref } from 'vue'
 
 export const usePokemon = () => {
-  const onStateGame = ref<stateGame>(stateGame.Playing)
-  const pokemonsRef = ref<Pokemon[]>([])
+  // const onStateGame = ref<stateGame>(stateGame.Playing)
+  const pokemons = ref<Pokemon[]>([])
   const pokemonOptions = ref<Pokemon[]>([])
+  const pokemonSelected = ref<Pokemon>()
   const hasPokemons = ref(false)
   const initialCountOptions = 4
 
@@ -13,11 +14,11 @@ export const usePokemon = () => {
     try {
       const pokemonsResponse = await pokeApi.get<PokemonsResponse>('/?limit=151')
 
-      const pokemons = pokemonsResponse.data.results
-      hasPokemons.value = pokemons.length > 0
+      const pokemonResults = pokemonsResponse.data.results
+      hasPokemons.value = pokemonResults.length > 0
 
       if (hasPokemons.value) {
-        pokemonsRef.value = pokemons.map((pokemon) => {
+        pokemons.value = pokemonResults.map((pokemon) => {
           const urlParts = pokemon.url.split('/')
           const pokemonId = urlParts.at(6) ?? '0'
 
@@ -33,31 +34,36 @@ export const usePokemon = () => {
   }
 
   const generatePokemonOptions = (countOptions: number = initialCountOptions) => {
-    onStateGame.value = stateGame.Playing
-    const pokemonsOrder = pokemonsRef.value.sort(() => Math.random() - 0.5)
+    const pokemonsOrder = pokemons.value.sort(() => Math.random() - 0.5)
     const options = pokemonsOrder.slice(0, countOptions)
     pokemonOptions.value = options
-    console.log(pokemonOptions.value)
+
+    generatePokemonSelected()
   }
 
-  const generatePokemonSelected = computed(() => {
+  const generatePokemonSelected = () => {
     const randomIndex = Math.floor(Math.random() * pokemonOptions.value.length)
-    return pokemonOptions.value[randomIndex]
-  })
-
-  const checkRes = (id: number) => {
-    console.log(id)
-    console.log(generatePokemonSelected.value.id)
-
-    const youWon = generatePokemonSelected.value.id === id
-    if (youWon) {
-      onStateGame.value = stateGame.Won
-      console.log('you won')
-    } else {
-      onStateGame.value = stateGame.Lost
-      console.log('you lost')
-    }
+    pokemonSelected.value = pokemonOptions.value[randomIndex]
   }
+
+  // const generatePokemonSelected = computed(() => {
+  //   const randomIndex = Math.floor(Math.random() * pokemonOptions.value.length)
+  //   return pokemonOptions.value[randomIndex]
+  // })
+
+  // const checkRes = (id: number) => {
+  //   console.log(id)
+  //   console.log(generatePokemonSelected.value.id)
+
+  //   const youWon = generatePokemonSelected.value.id === id
+  //   if (youWon) {
+  //     onStateGame.value = stateGame.Won
+  //     console.log('you won')
+  //   } else {
+  //     onStateGame.value = stateGame.Lost
+  //     console.log('you lost')
+  //   }
+  // }
 
   onMounted(async () => {
     await getPokemons()
@@ -66,10 +72,11 @@ export const usePokemon = () => {
     }
   })
   return {
-    onStateGame,
+    // onStateGame,
     pokemonOptions,
-    generatePokemonOptions,
-    generatePokemonSelected,
-    checkRes
+    pokemonSelected
+    // generatePokemonOptions,
+    // generatePokemonSelected,
+    // checkRes
   }
 }

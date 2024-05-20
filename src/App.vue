@@ -1,27 +1,26 @@
 <template>
   <LayoutPokemon>
     <HeaderPokemon />
-    <BodyPokemon
-      v-if="options.length"
-      :pokemon-id="generatePokemonSelected.id"
-      :show-pokemon="onStateGame == stateGame.Playing"
-      @generate-options="generatePokemonOptions(4)"
-      :options="options"
-      :afterRes="onStateGame !== stateGame.Playing"
+    <PicturePokemon :id="pokemonSelected?.id" :name="pokemonSelected?.name" />
+    <CardPokemon
+      v-for="pokemon in pokemonOptions"
+      :key="pokemon.id"
+      :id="pokemon.id"
+      :name="pokemon.name"
     />
     <FooterPokemon />
   </LayoutPokemon>
 </template>
 
 <script setup lang="ts">
-import { LayoutPokemon, HeaderPokemon, BodyPokemon, FooterPokemon } from '@/components'
-import { usePokemon } from '@/composables'
-import { stateGame } from './interface'
+import {
+  LayoutPokemon,
+  HeaderPokemon,
+  FooterPokemon,
+  CardPokemon,
+  PicturePokemon,
+} from "@/components";
+import { usePokemon } from "@/composables";
 
-const {
-  pokemonOptions: options,
-  generatePokemonOptions,
-  generatePokemonSelected,
-  onStateGame
-} = usePokemon()
+const { pokemonOptions, pokemonSelected } = usePokemon();
 </script>

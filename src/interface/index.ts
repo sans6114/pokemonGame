@@ -15,8 +15,8 @@ export interface Pokemon {
   name: string
 }
 
-export enum stateGame {
-  Playing = 'playing',
-  Won = 'won',
-  Lost = 'lost'
-}
+// export enum stateGame {
+//   Playing = 'playing',
+//   Won = 'won',
+//   Lost = 'lost'
+// }
