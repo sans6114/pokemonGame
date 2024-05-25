@@ -1,9 +1,10 @@
 import { pokeApi } from '@/api'
-import { type Pokemon, type PokemonsResponse } from '@/interface'
+import { stateGame, type Pokemon, type PokemonsResponse } from '@/interface'
+import confetti from 'canvas-confetti'
 import { onMounted, ref } from 'vue'
 
 export const usePokemon = () => {
-  // const onStateGame = ref<stateGame>(stateGame.Playing)
+  const currentStateGame = ref<stateGame>(stateGame.Playing)
   const pokemons = ref<Pokemon[]>([])
   const pokemonOptions = ref<Pokemon[]>([])
   const pokemonSelected = ref<Pokemon>()
@@ -46,24 +47,20 @@ export const usePokemon = () => {
     pokemonSelected.value = pokemonOptions.value[randomIndex]
   }
 
-  // const generatePokemonSelected = computed(() => {
-  //   const randomIndex = Math.floor(Math.random() * pokemonOptions.value.length)
-  //   return pokemonOptions.value[randomIndex]
-  // })
+  const onValidateSelectedPokemon = (id: number) => {
+    const youWon = pokemonSelected.value?.id === id
 
-  // const checkRes = (id: number) => {
-  //   console.log(id)
-  //   console.log(generatePokemonSelected.value.id)
-
-  //   const youWon = generatePokemonSelected.value.id === id
-  //   if (youWon) {
-  //     onStateGame.value = stateGame.Won
-  //     console.log('you won')
-  //   } else {
-  //     onStateGame.value = stateGame.Lost
-  //     console.log('you lost')
-  //   }
-  // }
+    if (youWon) {
+      currentStateGame.value = stateGame.Won;
+      confetti({
+        particleCount: 300,
+        spread: 150,
+        origin: { y: 0.6 }
+      })
+    } else {
+      currentStateGame.value = stateGame.Lost
+    }
+  }
 
   onMounted(async () => {
     await getPokemons()
@@ -72,11 +69,9 @@ export const usePokemon = () => {
     }
   })
   return {
-    // onStateGame,
     pokemonOptions,
-    pokemonSelected
-    // generatePokemonOptions,
-    // generatePokemonSelected,
-    // checkRes
+    pokemonSelected,
+    onValidateSelectedPokemon,
+    currentStateGame
   }
 }

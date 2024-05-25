@@ -1,13 +1,9 @@
 <template>
   <LayoutPokemon>
     <HeaderPokemon />
-    <PicturePokemon :id="pokemonSelected?.id" :name="pokemonSelected?.name" />
-    <CardPokemon
-      v-for="pokemon in pokemonOptions"
-      :key="pokemon.id"
-      :id="pokemon.id"
-      :name="pokemon.name"
-    />
+    <PicturePokemon :id="pokemonSelected?.id ?? 0" :name="pokemonSelected?.name ?? ''" />
+    <CardPokemon v-for="pokemon in pokemonOptions" :key="pokemon.id" :id="pokemon.id" :name="pokemon.name"
+      :on-validate-selected="onValidateSelectedPokemon" />
     <FooterPokemon />
   </LayoutPokemon>
 </template>
@@ -22,5 +18,5 @@ import {
 } from "@/components";
 import { usePokemon } from "@/composables";
 
-const { pokemonOptions, pokemonSelected } = usePokemon();
+const { pokemonOptions, pokemonSelected, onValidateSelectedPokemon } = usePokemon();
 </script>
