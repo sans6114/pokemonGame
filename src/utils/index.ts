@@ -1,1 +1,1 @@
-export * from './url-sprites'
+export * from "./formatPokemons-response"

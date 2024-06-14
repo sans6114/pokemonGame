@@ -1,22 +1,17 @@
 <template>
   <LayoutPokemon>
     <HeaderPokemon />
-    <PicturePokemon :id="pokemonSelected?.id ?? 0" :name="pokemonSelected?.name ?? ''" />
-    <CardPokemon v-for="pokemon in pokemonOptions" :key="pokemon.id" :id="pokemon.id" :name="pokemon.name"
-      :on-validate-selected="onValidateSelectedPokemon" />
-    <FooterPokemon />
+    <CountPokemon v-if="store.showPokemonOptions" />
+    <PicturePokemon />
+
+    <OptionsPokemon v-if="store.showPokemonOptions" />
+    <BtnPlayAgain v-else />
   </LayoutPokemon>
 </template>
 
 <script setup lang="ts">
-import {
-  LayoutPokemon,
-  HeaderPokemon,
-  FooterPokemon,
-  CardPokemon,
-  PicturePokemon,
-} from "@/components";
-import { usePokemon } from "@/composables";
+import { LayoutPokemon, HeaderPokemon, OptionsPokemon, PicturePokemon, CountPokemon, BtnPlayAgain } from '@/components'
+import { useStorePokemons } from '@/store';
 
-const { pokemonOptions, pokemonSelected, onValidateSelectedPokemon } = usePokemon();
+const store = useStorePokemons();
 </script>

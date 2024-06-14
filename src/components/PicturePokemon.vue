@@ -1,10 +1,11 @@
 <template>
-  <img :src="`${urlSprites}/${id}.svg`" :alt="name" class="w-[200px] brightness-0 mx-auto mb-6" />
+  <img :src="`${urlSprites}/${store.pokemonSelected?.id}.svg`"
+    :class="{ 'brightness-0': store.opportunities > 0 }" class="w-[250px] mx-auto" />
 </template>
 
-<script lang="ts" setup>
-import { urlSprites } from "../utils";
-import { type Pokemon } from '../interface';
+<script setup lang="ts">
+import { urlSprites } from '@/constants';
+import { useStorePokemons } from '@/store';
 
-const { id, name } = defineProps<Pokemon>();
+const store = useStorePokemons();
 </script>
